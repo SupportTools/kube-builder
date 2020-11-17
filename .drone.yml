@@ -10,26 +10,7 @@ steps:
       repo: supporttools/kube-builder
       tags:
         - pr-${DRONE_BUILD_NUMBER}
-        - latest
       username:
         from_secret: docker-username
       password:
         from_secret: docker-password
-    when:
-      branch:
-      - feature/*
-
-  - name: build-docker
-    image: plugins/docker
-    settings:
-      repo: supporttools/kube-builder
-      tags:
-        - master-${DRONE_BUILD_NUMBER}
-        - latest
-      username:
-        from_secret: docker-username
-      password:
-        from_secret: docker-password
-    when:
-      branch:
-      - master
