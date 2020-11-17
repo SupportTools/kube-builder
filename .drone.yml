@@ -1,10 +1,10 @@
 ---
 kind: pipeline
-type: docker
-name: SupportTools-Kube-Builder
+type: kubernetes
+name: Kube-Builder
 
 steps:
-  - name: build-docker
+  - name: docker-build-npd
     image: plugins/docker
     settings:
       repo: supporttools/kube-builder
@@ -14,3 +14,21 @@ steps:
         from_secret: docker-username
       password:
         from_secret: docker-password
+    when:
+      branch:
+      - feature/*
+
+  - name: docker-build-prd
+    image: plugins/docker
+    settings:
+      repo: supporttools/kube-builder
+      tags:
+        - ${DRONE_BUILD_NUMBER}
+        - latest
+      username:
+        from_secret: docker-username
+      password:
+        from_secret: docker-password
+    when:
+      branch:
+      - master
