@@ -31,4 +31,4 @@ steps:
         from_secret: docker-password
     when:
       branch:
-      - master
+      - main
