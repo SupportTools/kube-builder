@@ -21,7 +21,9 @@ chmod +x /usr/local/bin/kubectl && \
 mkdir /root/.kube
 
 ## Install Helm3
-RUN wget "https://storage.googleapis.com/kubernetes-helm/helm-$(wget -qO- https://github.com/kubernetes/helm/releases | sed -n '/Latest release<\/a>/,$p' | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' |head -1)-linux-amd64.tar.gz" && \
+RUN HVER=$(curl -sSL https://github.com/kubernetes/helm/releases | sed -n '/Latest release<\/a>/,$p' | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1) && \
+echo "Helm verison: $HVER" && \
+curl -LO https://storage.googleapis.com/kubernetes-helm/helm-${HVER}-linux-amd64.tar.gz && \
 tar -zvxf helm-* && \
 cd linux-amd64 && \
 chmod +x helm && \
