@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM sinlead/drone-kubectl:latest
 MAINTAINER Matthew Mattox <mmattox@support.tools>
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -17,8 +17,7 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
 
 ## Install kubectl
 RUN curl -sLf https://storage.googleapis.com/kubernetes-release/release/$(curl -ks https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl > /usr/local/bin/kubectl && \
-chmod +x /usr/local/bin/kubectl && \
-mkdir /root/.kube
+chmod +x /usr/local/bin/kubectl
 
 ## Install Helm3
 RUN HVER=$(curl -sSL https://github.com/kubernetes/helm/releases | sed -n '/Latest release<\/a>/,$p' | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1) && \
@@ -27,5 +26,3 @@ tar -zvxf helm-* && \
 cd linux-amd64 && \
 chmod +x helm && \
 mv helm /usr/local/bin/helm
-
-COPY init-kubectl /usr/local/bin/
