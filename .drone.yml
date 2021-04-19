@@ -4,7 +4,16 @@ type: kubernetes
 name: Kube-Builder
 
 steps:
-  - name: Docker-Build
+  - name: Docker-Build-Dry-Run
+    image: plugins/docker
+    settings:
+      repo: supporttools/kube-builder
+      dry_run: true
+      tags:
+        - ${DRONE_BUILD_NUMBER}
+        - latest
+
+  - name: Docker-Build-Publish
     image: plugins/docker
     settings:
       repo: supporttools/kube-builder
@@ -15,3 +24,11 @@ steps:
         from_secret: docker-username
       password:
         from_secret: docker-password
+    when:
+     event:
+     - deployment
+     - promote
+     - cron
+     target:
+     - production
+     - weekly
