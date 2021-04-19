@@ -27,3 +27,5 @@ tar -zvxf helm-* && \
 cd linux-amd64 && \
 chmod +x helm && \
 mv helm /usr/local/bin/helm
+
+COPY init-kubectl /usr/local/bin/
