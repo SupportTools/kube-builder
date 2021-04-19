@@ -7,12 +7,8 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     apt-utils \
     curl \
     wget \
-    dnsutils \
     jq \
-    python3-pip \
-    awscli \
     openssh-client \
-    iputils-ping \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ## Install kubectl
@@ -26,3 +22,7 @@ tar -zvxf helm-* && \
 cd linux-amd64 && \
 chmod +x helm && \
 mv helm /usr/local/bin/helm
+
+# Install jq
+RUN curl -sLf http://stedolan.github.io/jq/download/linux64/jq > /usr/local/bin/jq && \
+chmod +x /usr/local/bin/jq
