@@ -4,21 +4,16 @@ type: kubernetes
 name: Kube-Builder
 
 steps:
-  - name: docker-build-npd
+  - name: Docker-Build-Dry-Run
     image: plugins/docker
     settings:
       repo: supporttools/kube-builder
+      dry_run: true
       tags:
-        - pr-${DRONE_BUILD_NUMBER}
-      username:
-        from_secret: docker-username
-      password:
-        from_secret: docker-password
-    when:
-      branch:
-      - feature/*
+        - ${DRONE_BUILD_NUMBER}
+        - latest
 
-  - name: docker-build-prd
+  - name: Docker-Build-Publish
     image: plugins/docker
     settings:
       repo: supporttools/kube-builder
@@ -30,5 +25,10 @@ steps:
       password:
         from_secret: docker-password
     when:
-      branch:
-      - main
+     event:
+     - deployment
+     - promote
+     - cron
+     target:
+     - production
+     - weekly
