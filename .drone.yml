@@ -4,7 +4,7 @@ type: kubernetes
 name: Kube-Builder
 
 steps:
-  - name: Docker-Build-Dry-Run
+  - name: Docker-Build
     image: plugins/docker
     settings:
       repo: supporttools/kube-builder
@@ -13,7 +13,7 @@ steps:
         - ${DRONE_BUILD_NUMBER}
         - latest
 
-  - name: Docker-Build-Publish
+  - name: Docker-Publish
     image: plugins/docker
     settings:
       repo: supporttools/kube-builder
