@@ -1,7 +1,7 @@
 ---
 kind: pipeline
 type: kubernetes
-name: Kube-Builder
+name: Kube-Builder-linux-amd64
 
 platform:
   os: linux
@@ -17,6 +17,9 @@ steps:
         - ${DRONE_BUILD_NUMBER}
         - ${DRONE_COMMIT}
         - latest
+        - ${DRONE_BUILD_NUMBER}-linux-amd64
+        - ${DRONE_COMMIT}-linux-amd64
+        - latest-linux-amd64
 
   - name: Docker-Publish
     image: plugins/docker
@@ -26,6 +29,9 @@ steps:
         - ${DRONE_BUILD_NUMBER}
         - ${DRONE_COMMIT}
         - latest
+        - ${DRONE_BUILD_NUMBER}-linux-amd64
+        - ${DRONE_COMMIT}-linux-amd64
+        - latest-linux-amd64
       username:
         from_secret: docker-username
       password:

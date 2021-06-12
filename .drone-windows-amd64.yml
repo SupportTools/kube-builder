@@ -1,10 +1,10 @@
 ---
 kind: pipeline
 type: kubernetes
-name: Kube-Builder
+name: Kube-Builder-windows-amd64
 
 platform:
-  os: linux
+  os: windows
   arch: amd64
 
 steps:
@@ -12,20 +12,28 @@ steps:
     image: plugins/docker
     settings:
       repo: supporttools/kube-builder
+      dockerfile: ./Dockerfile-windows
       dry_run: true
       tags:
         - ${DRONE_BUILD_NUMBER}
         - ${DRONE_COMMIT}
         - latest
+        - ${DRONE_BUILD_NUMBER}-windows-amd64
+        - ${DRONE_COMMIT}-windows-amd64
+        - latest-windows-amd64
 
   - name: Docker-Publish
     image: plugins/docker
     settings:
       repo: supporttools/kube-builder
+      dockerfile: ./Dockerfile-windows
       tags:
         - ${DRONE_BUILD_NUMBER}
         - ${DRONE_COMMIT}
         - latest
+        - ${DRONE_BUILD_NUMBER}-windows-amd64
+        - ${DRONE_COMMIT}-windows-amd64
+        - latest-windows-amd64
       username:
         from_secret: docker-username
       password:
@@ -41,5 +49,5 @@ steps:
 
 node_selector:
   kubernetes.io/arch: amd64
-  kubernetes.io/os: linux
+  kubernetes.io/os: windows
   drone-runner: true
