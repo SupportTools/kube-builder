@@ -1,5 +1,4 @@
 FROM sinlead/drone-kubectl:latest
-MAINTAINER Matthew Mattox <mmattox@support.tools>
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -8,7 +7,15 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     curl \
     wget \
     openssh-client \
+    git \
+    python3 \
+    python3-pip \
+    python3-setuptools \
+    && pip3 install --upgrade pip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+## Install AWS CLI
+RUN pip3 --no-cache-dir install --upgrade awscli
 
 ## Install kubectl
 RUN curl -sLf https://storage.googleapis.com/kubernetes-release/release/$(curl -ks https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/arm64/kubectl > /usr/local/bin/kubectl && \
