@@ -1,6 +1,7 @@
 FROM sinlead/drone-kubectl:latest
 
-
+ARG APT_MIRROR=debian.uchicago.edu
+RUN sed -ri "s/(httpredir|deb).debian.org/$APT_MIRROR/g" /etc/apt/sources.list
 
 ENV DEBIAN_FRONTEND=noninteractive
 
