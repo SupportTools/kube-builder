@@ -22,12 +22,13 @@ RUN curl -sLf https://storage.googleapis.com/kubernetes-release/release/$(curl -
 chmod +x /usr/local/bin/kubectl
 
 ## Install Helm3
-RUN HVER=$(curl -sSL https://github.com/kubernetes/helm/releases | sed -n '/Latest release<\/a>/,$p' | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1) && \
-wget -k https://get.helm.sh/helm-"$HVER"-linux-arm64.tar.gz && \
-tar -zvxf helm-* && \
-cd linux-arm64 && \
-chmod +x helm && \
-mv helm /usr/local/bin/helm
+#RUN HVER=$(curl -sSL https://github.com/kubernetes/helm/releases | sed -n '/Latest release<\/a>/,$p' | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1) && \
+#wget -k https://get.helm.sh/helm-"$HVER"-linux-arm64.tar.gz && \
+#tar -zvxf helm-* && \
+#cd linux-arm64 && \
+#chmod +x helm && \
+#mv helm /usr/local/bin/helm
+RUN curl -ks https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 
 # Install jq
 RUN curl -sLf http://stedolan.github.io/jq/download/linux64/jq > /usr/local/bin/jq && \
