@@ -17,10 +17,14 @@ steps:
         - ${DRONE_BUILD_NUMBER}
         - ${DRONE_COMMIT}
         - latest
+    when:
+      event:
+      - push
 
   - name: Docker-Publish
     image: plugins/docker
     settings:
+      custom_dns: [ 1.1.1.1 ]
       repo: supporttools/kube-builder
       tags:
         - ${DRONE_BUILD_NUMBER}
