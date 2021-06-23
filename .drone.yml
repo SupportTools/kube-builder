@@ -11,6 +11,7 @@ steps:
   - name: Docker-Build
     image: plugins/docker
     settings:
+      custom_dns: [ 1.1.1.1 ]
       repo: supporttools/kube-builder
       dry_run: true
       tags:
@@ -21,6 +22,7 @@ steps:
   - name: Docker-Publish
     image: plugins/docker
     settings:
+      custom_dns: [ 1.1.1.1 ]
       repo: supporttools/kube-builder
       tags:
         - ${DRONE_BUILD_NUMBER}
