@@ -42,4 +42,3 @@ steps:
 node_selector:
   kubernetes.io/arch: amd64
   kubernetes.io/os: linux
-  drone-runner: true
