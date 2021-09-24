@@ -14,6 +14,7 @@ steps:
     settings:
       repo: supporttools/kube-builder
       dry_run: true
+      purge: false
       tags:
         - ${DRONE_BUILD_NUMBER}
         - ${DRONE_COMMIT}
@@ -24,6 +25,7 @@ steps:
     custom_dns: [ 172.27.2.2.23, 172.27.2.23 ]
     settings:
       repo: supporttools/kube-builder
+      purge: false
       tags:
         - ${DRONE_BUILD_NUMBER}
         - ${DRONE_COMMIT}
