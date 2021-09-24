@@ -5,6 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -y && apt-get install -yq --no-install-recommends \
     curl \
     wget \
+    git \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ## Install kubectl
