@@ -2,7 +2,7 @@ FROM sinlead/drone-kubectl:latest
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get install -yq --no-install-recommends \
+RUN apt install -yq --no-install-recommends \
     curl \
     wget \
     openssh-client \
