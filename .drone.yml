@@ -1,7 +1,7 @@
 ---
 kind: pipeline
 type: kubernetes
-name: Kube-Builder
+name: docker
 
 platform:
   os: linux
@@ -40,7 +40,3 @@ steps:
      target:
      - production
      - weekly
-
-node_selector:
-  kubernetes.io/arch: amd64
-  kubernetes.io/os: linux
