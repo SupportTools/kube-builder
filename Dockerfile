@@ -25,8 +25,8 @@ RUN curl -sLf http://stedolan.github.io/jq/download/linux64/jq > /usr/local/bin/
 chmod +x /usr/local/bin/jq
 
 # GitHub CLI
-RUN GITHUB_CLI_VERSION=$(curl -sSL https://github.com/cli/cli/releases | sed -n '/Latest release<\/a>/,$p' | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1 | tr -d 'v')
-RUN curl -OL "https://github.com/cli/cli/releases/download/v${GITHUB_CLI_VERSION}/gh_${GITHUB_CLI_VERSION}_linux_amd64.deb"
-RUN dpkg -i "gh_${GITHUB_CLI_VERSION}_linux_amd64.deb"
-RUN rm -rf "gh_${GITHUB_CLI_VERSION}_linux_amd64.deb"
-RUN gh --version
+ENV GITHUB_CLI_VERSION=2.0.0
+RUN curl -OL "https://github.com/cli/cli/releases/download/v${GITHUB_CLI_VERSION}/gh_${GITHUB_CLI_VERSION}_linux_amd64.deb" && \
+dpkg -i "gh_${GITHUB_CLI_VERSION}_linux_amd64.deb" && \
+rm -rf "gh_${GITHUB_CLI_VERSION}_linux_amd64.deb" && \
+gh --version
