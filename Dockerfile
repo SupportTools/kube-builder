@@ -26,8 +26,7 @@ chmod +x /usr/local/bin/jq
 
 # GitHub CLI
 RUN GITHUB_CLI_VERSION=$curl -sSL https://github.com/cli/cli/releases | sed -n '/Latest release<\/a>/,$p' | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1 | tr -d 'v') && \
-    curl -OL "https://github.com/cli/cli/releases/download/v${GITHUB_CLI_VERSION}/gh_${GITHUB_CLI_VERSION}_linux_amd64.deb"; \
-	dpkg -i "gh_${GITHUB_CLI_VERSION}_linux_amd64.deb"; \
-	rm -rf "gh_${GITHUB_CLI_VERSION}_linux_amd64.deb"; \
-    # verify gh binary works
+    curl -OL "https://github.com/cli/cli/releases/download/v${GITHUB_CLI_VERSION}/gh_${GITHUB_CLI_VERSION}_linux_amd64.deb" && \
+	dpkg -i "gh_${GITHUB_CLI_VERSION}_linux_amd64.deb" && \
+	rm -rf "gh_${GITHUB_CLI_VERSION}_linux_amd64.deb" && \
     gh --version;
