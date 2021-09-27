@@ -1,6 +1,6 @@
 ---
 kind: pipeline
-type: docker
+type: kubernetes
 name: Kube-Builder
 
 platform:
@@ -10,7 +10,6 @@ platform:
 steps:
   - name: Docker-Build
     image: plugins/docker
-    custom_dns: [ 172.27.2.2.23, 172.27.2.23 ]
     settings:
       repo: supporttools/kube-builder
       dry_run: true
@@ -22,7 +21,6 @@ steps:
 
   - name: Docker-Publish
     image: plugins/docker
-    custom_dns: [ 172.27.2.2.23, 172.27.2.23 ]
     settings:
       repo: supporttools/kube-builder
       purge: false
@@ -42,3 +40,7 @@ steps:
      target:
      - production
      - weekly
+
+node_selector:
+  beta.kubernetes.io/arch: amd64
+  drone-runner: true
