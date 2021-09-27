@@ -14,7 +14,7 @@ chmod +x /usr/local/bin/kubectl
 
 ## Install Helm3
 RUN HVER=$(curl -sSL https://github.com/kubernetes/helm/releases | sed -n '/Latest release<\/a>/,$p' | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1) && \
-wget -k https://get.helm.sh/helm-"$HVER"-linux-arm64.tar.gz && \
+wget -k https://get.helm.sh/helm-"$HVER"-linux-amd64.tar.gz && \
 tar -zvxf helm-* && \
 cd linux-arm64 && \
 chmod +x helm && \
