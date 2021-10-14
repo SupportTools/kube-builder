@@ -8,6 +8,9 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     wget \
     openssh-client \
     git \
+    zip \
+    unzip \
+    awscli \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ## Install kubectl
@@ -26,7 +29,7 @@ mv helm /usr/local/bin/helm
 RUN curl -sLf http://stedolan.github.io/jq/download/linux64/jq > /usr/local/bin/jq && \
 chmod +x /usr/local/bin/jq
 
-# GH CLI
+# Install GH CLI
 ENV GITHUB_CLI_VERSION 2.0.0
 
 RUN curl -L "https://github.com/cli/cli/releases/download/v${GITHUB_CLI_VERSION}/gh_${GITHUB_CLI_VERSION}_checksums.txt" -o checksums.txt; \
