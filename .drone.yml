@@ -17,9 +17,11 @@ steps:
       repo: supporttools/kube-builder
       dry_run: true
       purge: false
+      dockerfile: Dockerfile.AMD64
       tags:
         - ${DRONE_BUILD_NUMBER}
         - ${DRONE_COMMIT}
+        - latest-amd64
         - latest
 
   - name: Docker-Publish
@@ -27,9 +29,65 @@ steps:
     settings:
       repo: supporttools/kube-builder
       purge: false
+      dockerfile: Dockerfile.AMD64
       tags:
         - ${DRONE_BUILD_NUMBER}
         - ${DRONE_COMMIT}
+        - latest-amd64
+        - latest
+      username:
+        from_secret: docker-username
+      password:
+        from_secret: docker-password
+    when:
+     event:
+     - deployment
+     - promote
+     - cron
+     target:
+     - production
+     - weekly
+
+node_selector:
+  beta.kubernetes.io/arch: amd64
+  drone-runner: true
+
+---
+kind: pipeline
+type: docker
+name: Docker-Build-ARM64
+
+platform:
+  os: linux
+  arch: arm64
+
+clone:
+  depth: 1
+
+steps:
+  - name: Docker-Build
+    image: plugins/docker
+    settings:
+      repo: supporttools/kube-builder
+      dry_run: true
+      purge: false
+      dockerfile: Dockerfile.ARM64
+      tags:
+        - ${DRONE_BUILD_NUMBER}
+        - ${DRONE_COMMIT}
+        - latest-arm64
+        - latest
+
+  - name: Docker-Publish
+    image: plugins/docker
+    settings:
+      repo: supporttools/kube-builder
+      purge: false
+      dockerfile: Dockerfile.ARM64
+      tags:
+        - ${DRONE_BUILD_NUMBER}
+        - ${DRONE_COMMIT}
+        - latest-arm64
         - latest
       username:
         from_secret: docker-username
