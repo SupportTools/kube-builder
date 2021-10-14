@@ -16,6 +16,7 @@ steps:
     settings:
       repo: supporttools/kube-builder
       dry_run: true
+      purge: false
       tags:
         - ${DRONE_BUILD_NUMBER}
         - ${DRONE_COMMIT}
@@ -25,6 +26,7 @@ steps:
     image: plugins/docker
     settings:
       repo: supporttools/kube-builder
+      purge: false
       tags:
         - ${DRONE_BUILD_NUMBER}
         - ${DRONE_COMMIT}
@@ -41,3 +43,7 @@ steps:
      target:
      - production
      - weekly
+
+node_selector:
+  beta.kubernetes.io/arch: amd64
+  drone-runner: true
