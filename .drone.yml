@@ -19,26 +19,51 @@ steps:
       purge: false
       dockerfile: Dockerfile.AMD64
       tags:
-        - ${DRONE_BUILD_NUMBER}
-        - ${DRONE_COMMIT}
+        - ${DRONE_BUILD_NUMBER}-amd64
+        - ${DRONE_COMMIT}-amd64
         - latest-amd64
         - latest
 
-  - name: Docker-Publish
+  - name: Docker-Publish-Hub
     image: plugins/docker
     settings:
       repo: supporttools/kube-builder
       purge: false
       dockerfile: Dockerfile.AMD64
       tags:
-        - ${DRONE_BUILD_NUMBER}
-        - ${DRONE_COMMIT}
+        - ${DRONE_BUILD_NUMBER}-amd64
+        - ${DRONE_COMMIT}-amd64
         - latest-amd64
         - latest
       username:
         from_secret: docker-username
       password:
         from_secret: docker-password
+    when:
+     event:
+     - deployment
+     - promote
+     - cron
+     target:
+     - production
+     - weekly
+
+  - name: Docker-Publish-Private
+    image: plugins/docker
+    settings:
+      registry: harbor.support.tools
+      repo:  harbor.support.tools/supporttools/kube-builder
+      purge: false
+      dockerfile: Dockerfile.AMD64
+      tags:
+        - ${DRONE_BUILD_NUMBER}-amd64
+        - ${DRONE_COMMIT}-amd64
+        - latest-amd64
+        - latest
+      username:
+        from_secret: harbor-username
+      password:
+        from_secret: harbor-password
     when:
      event:
      - deployment
@@ -73,26 +98,48 @@ steps:
       purge: false
       dockerfile: Dockerfile.ARM64
       tags:
-        - ${DRONE_BUILD_NUMBER}
-        - ${DRONE_COMMIT}
+        - ${DRONE_BUILD_NUMBER}-arm64
+        - ${DRONE_COMMIT}-arm64
         - latest-arm64
-        - latest
 
-  - name: Docker-Publish
+  - name: Docker-Publish-Hub
     image: plugins/docker
     settings:
       repo: supporttools/kube-builder
       purge: false
       dockerfile: Dockerfile.ARM64
       tags:
-        - ${DRONE_BUILD_NUMBER}
-        - ${DRONE_COMMIT}
+        - ${DRONE_BUILD_NUMBER}-arm64
+        - ${DRONE_COMMIT}-arm64
         - latest-arm64
-        - latest
       username:
         from_secret: docker-username
       password:
         from_secret: docker-password
+    when:
+     event:
+     - deployment
+     - promote
+     - cron
+     target:
+     - production
+     - weekly
+
+  - name: Docker-Publish-Private
+    image: plugins/docker
+    settings:
+      registry: harbor.support.tools
+      repo:  harbor.support.tools/supporttools/kube-builder
+      purge: false
+      dockerfile: Dockerfile.ARM64
+      tags:
+        - ${DRONE_BUILD_NUMBER}-arm64
+        - ${DRONE_COMMIT}-arm64
+        - latest-arm64
+      username:
+        from_secret: harbor-username
+      password:
+        from_secret: harbor-password
     when:
      event:
      - deployment
