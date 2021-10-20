@@ -38,14 +38,14 @@ steps:
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   - docker buildx create --name multiarch --use
   - docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6 -t supporttools/kube-builder:latest -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} -t supporttools/kube-builder:$DRONE_COMMIT_SHA --push .
-    when:
-     event:
-     - deployment
-     - promote
-     - cron
-     target:
-     - production
-     - weekly
+  when:
+    event:
+    - deployment
+    - promote
+    - cron
+    target:
+    - production
+    - weekly
 
 services:
 - name: docker-in-docker
