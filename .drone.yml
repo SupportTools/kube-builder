@@ -15,19 +15,6 @@ environment:
   DOCKER_CLI_EXPERIMENTAL: enabled
 
 steps:
-  - name: Docker-Build
-    image: plugins/docker
-    settings:
-      repo: supporttools/kube-builder
-      dry_run: true
-      purge: false
-      dockerfile: Dockerfile.AMD64
-      tags:
-        - ${DRONE_BUILD_NUMBER}-amd64
-        - ${DRONE_COMMIT}-amd64
-        - latest-amd64
-        - latest
-
 - name: Docker Build
   image: ncrmro/docker-buildx:19.03.10
   commands:
