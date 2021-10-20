@@ -15,7 +15,7 @@ environment:
   DOCKER_CLI_EXPERIMENTAL: enabled
 
 steps:
-- name: Docker Build - AMD64
+- name: Docker Build - linux/amd64
   image: ncrmro/docker-buildx:19.03.10
   commands:
   - docker version
@@ -24,17 +24,17 @@ steps:
   - docker buildx create --name multiarch --use
   - docker buildx build --platform linux/amd64 -t supporttools/kube-builder:latest -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} -t supporttools/kube-builder:$DRONE_COMMIT_SHA -f Dockerfile.AMD64 .
 
-- name: Docker Build - ARM64
+- name: Docker Build - linux/arm64
   image: ncrmro/docker-buildx:19.03.10
   commands:
   - docker version
   - docker buildx version
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   - docker buildx create --name multiarch --use
-  - docker buildx build --platform linux/arm64 -t supporttools/kube-builder:latest -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} -t supporttools/kube-builder:$DRONE_COMMIT_SHA -f Dockerfile.ARM64 .
+  - docker buildx build --platform linux/arm64,linux/arm/v6,linux/arm/v7 -t supporttools/kube-builder:latest -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} -t supporttools/kube-builder:$DRONE_COMMIT_SHA -f Dockerfile.ARM64 .
 
 
-- name: Docker Publish
+- name: Docker Publish - linux/amd64
   image: ncrmro/docker-buildx:19.03.10
   environment:
     DOCKER_USERNAME:
@@ -47,7 +47,30 @@ steps:
   - echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   - docker buildx create --name multiarch --use
-  - docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t supporttools/kube-builder:latest -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} -t supporttools/kube-builder:$DRONE_COMMIT_SHA --push .
+  - docker buildx build --platform linux/amd64 -t supporttools/kube-builder:latest -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} -t supporttools/kube-builder:$DRONE_COMMIT_SHA --push -f -f Dockerfile.AMD64.
+  when:
+    event:
+    - deployment
+    - promote
+    - cron
+    target:
+    - production
+    - weekly
+
+- name: Docker Publish - linux/arm64
+  image: ncrmro/docker-buildx:19.03.10
+  environment:
+    DOCKER_USERNAME:
+      from_secret: docker-username
+    DOCKER_PASSWORD:
+      from_secret: docker-password
+  commands:
+  - docker version
+  - docker buildx version
+  - echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin
+  - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+  - docker buildx create --name multiarch --use
+  - docker buildx build --platform linux/arm64,linux/arm/v6,linux/arm/v7 -t supporttools/kube-builder:latest -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} -t supporttools/kube-builder:$DRONE_COMMIT_SHA --push -f Dockerfile.ARM64 .
   when:
     event:
     - deployment
