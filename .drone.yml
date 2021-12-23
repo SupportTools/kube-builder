@@ -17,6 +17,7 @@ steps:
   - name: dockersock
     path: /var/run
   commands:
+  - sleep 5
   - docker version
   - docker buildx version
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
@@ -29,6 +30,7 @@ steps:
   - name: dockersock
     path: /var/run
   commands:
+  - sleep 5
   - docker version
   - docker buildx version
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
