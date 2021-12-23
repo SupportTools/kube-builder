@@ -22,16 +22,9 @@ RUN curl -sLf https://storage.googleapis.com/kubernetes-release/release/$(curl -
 chmod +x /usr/local/bin/kubectl
 
 ## Install Helm3
-RUN HVER=$(curl -sSL https://github.com/kubernetes/helm/releases | sed -n '/Latest release<\/a>/,$p' | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1) && \
-wget -k https://get.helm.sh/helm-"$HVER"-linux-arm64.tar.gz && \
-tar -zvxf helm-* && \
-cd linux-arm64 && \
-chmod +x helm && \
-mv helm /usr/local/bin/helm
-
-# # Install jq
-# RUN curl -sLf http://stedolan.github.io/jq/download/linux64/jq > /usr/local/bin/jq && \
-# chmod +x /usr/local/bin/jq
+RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 && \
+chmod +x get_helm.sh && \
+./get_helm.sh
 
 # Install GH CLI
 ENV GITHUB_CLI_VERSION 2.0.0
