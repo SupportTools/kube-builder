@@ -10,12 +10,13 @@ platform:
 clone:
   depth: 1
 
+environment:
+  DOCKER_HOST: tcp://docker-in-docker:2375
+  DOCKER_CLI_EXPERIMENTAL: enabled
+
 steps:
 - name: Docker Build - linux/amd64
-  image: maniator/docker-with-buildx
-  volumes:
-  - name: dockersock
-    path: /var/run
+  image: ncrmro/docker-buildx:19.03.10
   commands:
   - sleep 5
   - docker version
@@ -25,10 +26,7 @@ steps:
   - docker buildx build --platform linux/amd64 -t supporttools/kube-builder:latest -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} -t supporttools/kube-builder:$DRONE_COMMIT_SHA -f Dockerfile.AMD64 .
 
 - name: Docker Build - linux/arm64
-  image: maniator/docker-with-buildx
-  volumes:
-  - name: dockersock
-    path: /var/run
+  image: ncrmro/docker-buildx:19.03.10
   commands:
   - sleep 5
   - docker version
@@ -38,15 +36,12 @@ steps:
   - docker buildx build --platform linux/arm64,linux/arm/v7 -t supporttools/kube-builder:latest -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} -t supporttools/kube-builder:$DRONE_COMMIT_SHA -f Dockerfile.ARM64 .
 
 - name: Docker Publish - linux/amd64
-  image: maniator/docker-with-buildx
+  image: ncrmro/docker-buildx:19.03.10
   environment:
     DOCKER_USERNAME:
       from_secret: docker-username
     DOCKER_PASSWORD:
       from_secret: docker-password
-  volumes:
-  - name: dockersock
-    path: /var/run
   commands:
   - docker version
   - docker buildx version
@@ -64,15 +59,12 @@ steps:
     - weekly
 
 - name: Docker Publish - linux/arm64
-  image: maniator/docker-with-buildx
+  image: ncrmro/docker-buildx:19.03.10
   environment:
     DOCKER_USERNAME:
       from_secret: docker-username
     DOCKER_PASSWORD:
       from_secret: docker-password
-  volumes:
-  - name: dockersock
-    path: /var/run
   commands:
   - docker version
   - docker buildx version
@@ -90,13 +82,8 @@ steps:
     - weekly
 
 services:
-- name: docker
-  image: maniator/docker-with-buildx
+- name: docker-in-docker
+  docker:
+  image: docker:19.03.12-dind
+  command: ["dockerd", "--host", "0.0.0.0", "--experimental"]
   privileged: true
-  volumes:
-  - name: dockersock
-    path: /var/run
-
-volumes:
-- name: dockersock
-  temp: {}
