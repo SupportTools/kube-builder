@@ -10,13 +10,12 @@ platform:
 clone:
   depth: 1
 
-environment:
-  DOCKER_HOST: tcp://docker-in-docker:2375
-  DOCKER_CLI_EXPERIMENTAL: enabled
-
 steps:
 - name: Docker Build - linux/amd64
   image: ncrmro/docker-buildx:19.03.10
+  volumes:
+  - name: dockersock
+    path: /var/run
   commands:
   - docker version
   - docker buildx version
@@ -26,6 +25,9 @@ steps:
 
 - name: Docker Build - linux/arm64
   image: ncrmro/docker-buildx:19.03.10
+  volumes:
+  - name: dockersock
+    path: /var/run
   commands:
   - docker version
   - docker buildx version
@@ -40,6 +42,9 @@ steps:
       from_secret: docker-username
     DOCKER_PASSWORD:
       from_secret: docker-password
+  volumes:
+  - name: dockersock
+    path: /var/run
   commands:
   - docker version
   - docker buildx version
@@ -63,6 +68,9 @@ steps:
       from_secret: docker-username
     DOCKER_PASSWORD:
       from_secret: docker-password
+  volumes:
+  - name: dockersock
+    path: /var/run
   commands:
   - docker version
   - docker buildx version
@@ -80,8 +88,13 @@ steps:
     - weekly
 
 services:
-- name: docker-in-docker
-  docker:
-  image: docker:19.03.12-dind
-  command: ["dockerd", "--host", "0.0.0.0", "--experimental"]
+- name: docker
+  image: docker:dind
   privileged: true
+  volumes:
+  - name: dockersock
+    path: /var/run
+
+volumes:
+- name: dockersock
+  temp: {}
