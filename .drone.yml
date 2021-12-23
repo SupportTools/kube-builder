@@ -11,11 +11,15 @@ environment:
   DOCKER_CLI_EXPERIMENTAL: enabled
 
 steps:
-- name: Docker Build - linux/amd64
+- name: Waiting for Docker to start
   image: ncrmro/docker-buildx:19.03.10
   commands:
   - echo 'Waiting for docker to start...'
-  - sleep 15
+  - while ! docker info; do sleep 1; done
+
+- name: Docker Build - linux/amd64
+  image: ncrmro/docker-buildx:19.03.10
+  commands:
   - docker version
   - docker buildx version
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
