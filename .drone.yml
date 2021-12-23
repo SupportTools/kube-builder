@@ -24,7 +24,7 @@ steps:
   - docker buildx version
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   - docker buildx create --name multiarch --use
-  - docker buildx build --platform linux/amd64,linux/arm64 -t supporttools/kube-builder:latest -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} -t supporttools/kube-builder:$DRONE_COMMIT_SHA -f Dockerfile .
+  - docker buildx build --platform linux/amd64,linux/arm64 -e http_proxy=http://apt-cache.support.tools:3142 -t supporttools/kube-builder:latest -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} -t supporttools/kube-builder:$DRONE_COMMIT_SHA -f Dockerfile .
 
 - name: Docker Publish
   image: ncrmro/docker-buildx:19.03.10
@@ -39,7 +39,7 @@ steps:
   - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   - docker buildx create --name multiarch --use
-  - docker buildx build --platform linux/amd64,linux/arm64 -t supporttools/kube-builder:latest -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} -t supporttools/kube-builder:$DRONE_COMMIT_SHA --push -f -f Dockerfile .
+  - docker buildx build --platform linux/amd64,linux/arm64 -e http_proxy=http://apt-cache.support.tools:3142 -t supporttools/kube-builder:latest -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} -t supporttools/kube-builder:$DRONE_COMMIT_SHA --push -f -f Dockerfile .
   when:
     event:
     - deployment
