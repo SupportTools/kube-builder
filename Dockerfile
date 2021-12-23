@@ -16,6 +16,7 @@ RUN apt update && apt install -yq --no-install-recommends \
     awscli \
     rsync \
     jq \
+    ca-certificates \
     && apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /etc/apt/apt.conf.d/01proxy
 
 COPY init-kubectl /usr/local/bin/
