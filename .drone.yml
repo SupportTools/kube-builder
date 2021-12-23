@@ -89,7 +89,7 @@ steps:
 
 services:
 - name: docker
-  image: docker:dind
+  image: maniator/docker-with-buildx
   privileged: true
   volumes:
   - name: dockersock
