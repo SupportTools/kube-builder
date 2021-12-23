@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 ARG TARGETPLATFORM
 
-RUN echo 'Acquire::http { Proxy "http://apt-cache.support.tools:3142"; };' >> /etc/apt/apt.conf.d/01proxy
+RUN echo 'Acquire::http { Proxy "http://172.28.1.0:3142"; };' >> /etc/apt/apt.conf.d/01proxy
 
 ENV DEBIAN_FRONTEND=noninteractive
 
