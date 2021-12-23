@@ -5,7 +5,7 @@ RUN sed -i -e 's/archive\.ubuntu\.com\/ubuntu\//apt-mirror\.support\.tools\/ubun
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt update && apt install -yq --no-install-recommends \
+RUN apt-get update && apt-get install -yq --no-install-recommends \
     apt-utils \
     curl \
     wget \
