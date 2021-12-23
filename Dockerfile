@@ -1,8 +1,6 @@
 FROM ubuntu:latest
 ARG TARGETPLATFORM
 
-RUN sed -i -e 's/archive\.ubuntu\.com\/ubuntu\//apt-mirror\.support\.tools\/ubuntu\//' /etc/apt/sources.list
-
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -yq --no-install-recommends \
