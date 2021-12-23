@@ -1,9 +1,9 @@
-FROM ubuntu:latest
+FROM ubuntu:20.04
 ARG TARGETPLATFORM
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -yq --no-install-recommends \
+RUN apt update && apt install -yq --no-install-recommends \
     apt-utils \
     curl \
     wget \
