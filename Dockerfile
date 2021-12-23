@@ -3,7 +3,7 @@ ARG TARGETPLATFORM
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -yq --no-install-recommends \
+RUN apt-get update --allow-unauthenticated && apt-get install -yq --no-install-recommends --allow-unauthenticated \
     apt-utils \
     curl \
     wget \
@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
     awscli \
     rsync \
     jq \
+    ca-certificates \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY init-kubectl /usr/local/bin/
