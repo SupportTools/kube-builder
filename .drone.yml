@@ -12,7 +12,7 @@ clone:
 
 steps:
 - name: Docker Build - linux/amd64
-  image: ncrmro/docker-buildx:19.03.10
+  image: maniator/docker-with-buildx
   volumes:
   - name: dockersock
     path: /var/run
@@ -24,7 +24,7 @@ steps:
   - docker buildx build --platform linux/amd64 -t supporttools/kube-builder:latest -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} -t supporttools/kube-builder:$DRONE_COMMIT_SHA -f Dockerfile.AMD64 .
 
 - name: Docker Build - linux/arm64
-  image: ncrmro/docker-buildx:19.03.10
+  image: maniator/docker-with-buildx
   volumes:
   - name: dockersock
     path: /var/run
@@ -36,7 +36,7 @@ steps:
   - docker buildx build --platform linux/arm64,linux/arm/v7 -t supporttools/kube-builder:latest -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} -t supporttools/kube-builder:$DRONE_COMMIT_SHA -f Dockerfile.ARM64 .
 
 - name: Docker Publish - linux/amd64
-  image: ncrmro/docker-buildx:19.03.10
+  image: maniator/docker-with-buildx
   environment:
     DOCKER_USERNAME:
       from_secret: docker-username
@@ -62,7 +62,7 @@ steps:
     - weekly
 
 - name: Docker Publish - linux/arm64
-  image: ncrmro/docker-buildx:19.03.10
+  image: maniator/docker-with-buildx
   environment:
     DOCKER_USERNAME:
       from_secret: docker-username
