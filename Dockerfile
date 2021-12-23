@@ -1,7 +1,7 @@
 FROM ubuntu:latest
 ARG TARGETPLATFORM
 
-RUN sed -i -e 's/http:\/\/archive\.ubuntu\.com\/ubuntu\//mirror:\/\/mirrors\.ubuntu\.com\/mirrors\.txt/' /etc/apt/sources.list
+RUN sed -i -e 's/archive\.ubuntu\.com\/ubuntu\//apt-mirror\.support\.tools\/ubuntu\//' /etc/apt/sources.list
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -17,7 +17,7 @@ RUN apt update && apt install -yq --no-install-recommends \
     rsync \
     jq \
     ca-certificates \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /etc/apt/apt.conf.d/01proxy
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY init-kubectl /usr/local/bin/
 
