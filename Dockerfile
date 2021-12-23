@@ -1,7 +1,7 @@
-FROM ubuntu:20.04
+FROM ubuntu:latest
 ARG TARGETPLATFORM
 
-RUN echo 'Acquire::http { Proxy "http://172.28.1.0:3142"; };' >> /etc/apt/apt.conf.d/01proxy
+RUN sed -i -e 's/http:\/\/archive\.ubuntu\.com\/ubuntu\//mirror:\/\/mirrors\.ubuntu\.com\/mirrors\.txt/' /etc/apt/sources.list
 
 ENV DEBIAN_FRONTEND=noninteractive
 
