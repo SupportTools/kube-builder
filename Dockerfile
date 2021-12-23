@@ -1,6 +1,8 @@
 FROM ubuntu:20.04
 ARG TARGETPLATFORM
 
+RUN echo 'Acquire::http { Proxy "http://apt-cache.support.tools:3142"; };' >> /etc/apt/apt.conf.d/01proxy
+
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt update && apt install -yq --no-install-recommends \
@@ -14,7 +16,7 @@ RUN apt update && apt install -yq --no-install-recommends \
     awscli \
     rsync \
     jq \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && apt-get clean && rm -rf /var/lib/apt/lists/* && rm -rf /etc/apt/apt.conf.d/01proxy
 
 COPY init-kubectl /usr/local/bin/
 
