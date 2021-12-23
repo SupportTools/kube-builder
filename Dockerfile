@@ -1,4 +1,8 @@
-FROM ubuntu:latest
+FROM --platform=$BUILDPLATFORM ubuntu:latest
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+
+RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -18,7 +22,7 @@ RUN apt-get update && apt-get install -yq --no-install-recommends \
 COPY init-kubectl /usr/local/bin/
 
 ## Install kubectl
-RUN curl -sLf https://storage.googleapis.com/kubernetes-release/release/$(curl -ks https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/arm64/kubectl > /usr/local/bin/kubectl && \
+RUN curl -sLf https://storage.googleapis.com/kubernetes-release/release/$(curl -ks https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl > /usr/local/bin/kubectl && \
 chmod +x /usr/local/bin/kubectl
 
 ## Install Helm3
