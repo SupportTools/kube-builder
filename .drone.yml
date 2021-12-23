@@ -85,7 +85,3 @@ services:
   image: docker:19.03.12-dind
   command: ["dockerd", "--host", "0.0.0.0", "--experimental"]
   privileged: true
-
-node_selector:
-  beta.kubernetes.io/arch: amd64
-  drone-runner: true
