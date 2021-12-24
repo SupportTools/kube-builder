@@ -21,7 +21,7 @@ steps:
   - docker buildx version
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   - docker buildx create --name multiarch --use
-  - docker buildx build --add-host=archive.ubuntu.com:172.27.9.27 --platform linux/amd64,linux/arm64 -t supporttools/kube-builder:latest -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} -t supporttools/kube-builder:$DRONE_COMMIT_SHA -f Dockerfile .
+  - docker buildx build --add-host=archive.ubuntu.com:172.27.9.27 --platform linux/amd64,linux/arm64 -f Dockerfile .
   when:
     event:
       exclude:
@@ -42,7 +42,7 @@ steps:
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   - docker buildx create --name multiarch --use
-  - docker buildx build --platform linux/amd64,linux/arm64 -t supporttools/kube-builder:latest -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} -t supporttools/kube-builder:$DRONE_COMMIT_SHA --push -f -f Dockerfile .
+  - docker buildx build --platform linux/amd64,linux/arm64 -t supporttools/kube-builder:latest -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} --push -f Dockerfile .
   when:
     event:
     - deployment
