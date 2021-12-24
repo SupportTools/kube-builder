@@ -25,8 +25,9 @@ steps:
   when:
     event:
       exclude:
-        - deployment
-        - promote
+      - deployment
+      - promote
+      - cron
 
 - name: Docker Publish
   image: ncrmro/docker-buildx:19.03.10
