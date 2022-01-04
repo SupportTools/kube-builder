@@ -18,6 +18,7 @@ RUN apt-get update --allow-unauthenticated && apt-get install -yq --no-install-r
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY init-kubectl /usr/local/bin/
+RUN chmod +x /usr/local/bin/init-kubectl
 
 ## Install kubectl
 RUN curl -sLf https://storage.googleapis.com/kubernetes-release/release/$(curl -ks https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/${TARGETPLATFORM}/kubectl > /usr/local/bin/kubectl && \
@@ -29,3 +30,5 @@ RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/s
 chmod +x get_helm.sh && \
 ./get_helm.sh && \
 helm
+
+ENTRYPOINT ["kubectl"]
