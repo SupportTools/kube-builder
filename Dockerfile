@@ -15,6 +15,7 @@ RUN apt-get update --allow-unauthenticated && apt-get install -yq --no-install-r
     rsync \
     jq \
     ca-certificates \
+    go \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY init-kubectl /usr/local/bin/
@@ -31,4 +32,10 @@ chmod +x get_helm.sh && \
 ./get_helm.sh && \
 helm
 
-ENTRYPOINT ["kubectl"]
+## Install KubeLinter
+RUN curl -fsSL -o kube-linter-linux.tar.gz https://github.com/stackrox/kube-linter/releases/download/0.2.5/kube-linter-linux.tar.gz && \
+tar -zvxf kube-linter-linux.tar.gz && \
+chmod +x kube-linter && \
+mv kube-linter /usr/local/bin/kube-linter
+
+ENTRYPOINT ["/usr/local/bin/init-kubectl"]
