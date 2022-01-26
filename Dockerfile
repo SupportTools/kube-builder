@@ -1,9 +1,10 @@
 FROM ubuntu:latest
+ARG TARGETARCH
 ARG TARGETPLATFORM
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update --allow-unauthenticated && apt-get install -yq --no-install-recommends --allow-unauthenticated \
+RUN apt update -y && apt install -yq --no-install-recommends \
     apt-utils \
     curl \
     wget \
@@ -18,14 +19,9 @@ RUN apt-get update --allow-unauthenticated && apt-get install -yq --no-install-r
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY init-kubectl /usr/local/bin/
+RUN chmod +x /usr/local/bin/init-kubectl
 
-## Install kubectl
-RUN curl -sLf https://storage.googleapis.com/kubernetes-release/release/$(curl -ks https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/${TARGETPLATFORM}/kubectl > /usr/local/bin/kubectl && \
-chmod +x /usr/local/bin/kubectl && \
-kubectl
+COPY build.sh /tmp/
+RUN chmod u+x /tmp/build.sh && /tmp/build.sh $TARGETARCH
 
-## Install Helm3
-RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 && \
-chmod +x get_helm.sh && \
-./get_helm.sh && \
-helm
+ENTRYPOINT ["/usr/local/bin/init-kubectl"]

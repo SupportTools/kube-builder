@@ -3,6 +3,9 @@ kind: pipeline
 type: docker
 name: Kube-Builder
 
+concurrency:
+  limit: 1
+
 environment:
   DOCKER_HOST: tcp://docker-in-docker:2375
   DOCKER_CLI_EXPERIMENTAL: enabled
@@ -21,7 +24,13 @@ steps:
   - docker buildx version
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   - docker buildx create --name multiarch --use
-  - docker buildx build --add-host=archive.ubuntu.com:172.27.9.27 --platform linux/amd64,linux/arm64 -t supporttools/kube-builder:latest -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} -t supporttools/kube-builder:$DRONE_COMMIT_SHA -f Dockerfile .
+  - docker buildx build --add-host=archive.ubuntu.com:172.27.9.27 --platform linux/amd64,linux/arm64 -f Dockerfile .
+  when:
+    event:
+      exclude:
+      - deployment
+      - promote
+      - cron
 
 - name: Docker Publish
   image: ncrmro/docker-buildx:19.03.10
@@ -33,10 +42,10 @@ steps:
   commands:
   - docker version
   - docker buildx version
-  - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+  - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
   - docker buildx create --name multiarch --use
-  - docker buildx build --platform linux/amd64,linux/arm64 -t supporttools/kube-builder:latest -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} -t supporttools/kube-builder:$DRONE_COMMIT_SHA --push -f -f Dockerfile .
+  - docker buildx build --platform linux/amd64,linux/arm64 -t supporttools/kube-builder:latest -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} --push -f Dockerfile .
   when:
     event:
     - deployment
