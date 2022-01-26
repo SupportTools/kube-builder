@@ -7,13 +7,18 @@ then
   curl -sLf https://storage.googleapis.com/kubernetes-release/release/$(curl -ks https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl > /usr/local/bin/kubectl
   chmod +x /usr/local/bin/kubectl
 elif [ $1 == "arm64" ]
+then
   echo "arm64"
   curl -sLf https://storage.googleapis.com/kubernetes-release/release/$(curl -ks https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/arm64/kubectl > /usr/local/bin/kubectl
   chmod +x /usr/local/bin/kubectl
 elif [ $1 == "arm" ]
+then
   echo "arm"
   curl -sLf https://storage.googleapis.com/kubernetes-release/release/$(curl -ks https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/arm/kubectl > /usr/local/bin/kubectl
   chmod +x /usr/local/bin/kubectl
+else
+    echo "Unknown architecture"
+    exit 3
 fi
 kubectl version --client || exit 2
 
