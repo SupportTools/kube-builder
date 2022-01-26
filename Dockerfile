@@ -3,7 +3,7 @@ ARG TARGETPLATFORM
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update --allow-unauthenticated && apt-get install -yq --no-install-recommends --allow-unauthenticated \
+RUN apt-get update && apt-get install -yq --no-install-recommends \
     apt-utils \
     curl \
     wget \
