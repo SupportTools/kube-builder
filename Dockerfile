@@ -1,4 +1,5 @@
 FROM ubuntu:latest
+ARG TARGETARCH
 ARG TARGETPLATFORM
 
 ENV DEBIAN_FRONTEND=noninteractive
