@@ -41,3 +41,6 @@ then
 else
   echo "No ARM support yet"
 fi
+
+echo "Installing Go..."
+curl https://raw.githubusercontent.com/canha/golang-tools-install-script/master/goinstall.sh | bash
