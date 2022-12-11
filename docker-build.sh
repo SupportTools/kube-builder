@@ -2,7 +2,7 @@
 
 type docker >/dev/null 2>&1 || { echo >&2 "Docker is not installed.  Aborting."; exit 1; }
 
-if [[ $1 == "push" ]]
+if [ "$1" == "push" ]
 then
     echo "Logging into docker hub..."
     if ! docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
@@ -32,7 +32,7 @@ then
     exit 126
 fi
 
-if [[ $1 == "push" ]]
+if [ "$1" == "push" ]
 then
     echo "Test build, not pushing"
     exit 0
