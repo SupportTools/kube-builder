@@ -1,4 +1,4 @@
-FROM docker.io/ubuntu:latest
+FROM docker.io/ubuntu:22.04
 ARG TARGETARCH
 ARG TARGETPLATFORM
 
