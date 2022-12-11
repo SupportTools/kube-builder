@@ -1,6 +1,5 @@
 ---
 kind: pipeline
-type: docker
 name: Kube-Builder
 
 concurrency:
@@ -9,19 +8,16 @@ concurrency:
 environment:
   DOCKER_HOST: tcp://docker-in-docker:2375
   DOCKER_CLI_EXPERIMENTAL: enabled
-  http_proxy: http://proxy.apt-cacher:3142/
 
 steps:
 - name: Waiting for Docker to start
-  image: ncrmro/docker-buildx:19.03.10
+  image: cube8021/docker-buildx:20.10.14-0.8.2
   commands:
   - echo 'Waiting for docker to start...'
   - while ! docker info; do sleep 1; done
 
 - name: Docker Build
-  image: ncrmro/docker-buildx:19.03.10
-  environment:
-    http_proxy: http://proxy.apt-cacher:3142/
+  image: cube8021/docker-buildx:20.10.14-0.8.2
   commands:
   - docker version
   - docker buildx version
@@ -36,9 +32,8 @@ steps:
       - cron
 
 - name: Docker Publish
-  image: ncrmro/docker-buildx:19.03.10
+  image: cube8021/docker-buildx:20.10.14-0.8.2
   environment:
-    http_proxy: http://proxy.apt-cacher:3142/
     DOCKER_USERNAME:
       from_secret: docker-username
     DOCKER_PASSWORD:
@@ -62,6 +57,6 @@ steps:
 services:
 - name: docker-in-docker
   docker:
-  image: docker:19.03.12-dind
+  image: docker:20.10.14-dind
   command: ["dockerd", "--host", "0.0.0.0", "--experimental"]
   privileged: true
