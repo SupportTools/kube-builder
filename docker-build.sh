@@ -18,11 +18,18 @@ then
     exit 1
 fi
 
+echo "Pulling latest..."
+if ! docker pull supporttools/kube-builder:latest
+then
+    echo "Docker pull failed"
+    exit 127
+fi
+
 echo "Testing docker build..."
 if ! docker build -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} --cache-from supporttools/kube-builder:latest -f Dockerfile .
 then
     echo "Docker build failed"
-    exit 127
+    exit 126
 fi
 
 if [[ $1 == "push" ]]
@@ -35,18 +42,18 @@ echo "Pushing..."
 if ! docker push supporttools/kube-builder:${DRONE_BUILD_NUMBER}
 then
     echo "Docker push failed for build number"
-    exit 126
+    exit 125
 fi
 echo "Tagging to latest and pushing..."
 if ! docker tag supporttools/kube-builder:${DRONE_BUILD_NUMBER} supporttools/kube-builder:latest
 then
     echo "Docker tag failed"
-    exit 125
+    exit 124
 fi
 
 echo "Pushing latest..."
 if ! docker push supporttools/kube-builder:latest
 then
     echo "Docker push failed for latest"
-    exit 124
+    exit 123
 fi
