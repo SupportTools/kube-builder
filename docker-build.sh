@@ -1,0 +1,48 @@
+#!/bin/sh
+
+type docker >/dev/null 2>&1 || { echo >&2 "Docker is not installed.  Aborting."; exit 1; }
+
+if [ -z "$DRONE_BUILD_NUMBER" ]
+then
+    echo "DRONE_BUILD_NUMBER is not set.  Aborting."
+    exit 1
+fi
+
+echo "Testing docker build..."
+if ! docker build -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} --cache-from supporttools/kube-builder:latest -f Dockerfile .
+then
+    echo "Docker build failed"
+    exit 127
+fi
+
+if ! docker build -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} --cache-from supporttools/kube-builder:latest -f Dockerfile .
+then
+    echo "Docker build failed"
+    exit 127
+fi
+
+if [[ $1 == "push" ]]
+then
+    echo "Test build, not pushing"
+    exit 0
+fi
+
+echo "Pushing..."
+if ! docker push supporttools/kube-builder:${DRONE_BUILD_NUMBER}
+then
+    echo "Docker push failed for build number"
+    exit 126
+fi
+echo "Tagging to latest and pushing..."
+if ! docker tag supporttools/kube-builder:${DRONE_BUILD_NUMBER} supporttools/kube-builder:latest
+then
+    echo "Docker tag failed"
+    exit 125
+fi
+
+echo "Pushing latest..."
+if ! docker push supporttools/kube-builder:latest
+then
+    echo "Docker push failed for latest"
+    exit 124
+fi

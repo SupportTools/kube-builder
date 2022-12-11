@@ -19,11 +19,7 @@ steps:
 - name: Docker Build
   image: cube8021/docker-buildx:20.10.14-0.8.2
   commands:
-  - docker version
-  - docker buildx version
-  - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-  - docker buildx create --name multiarch --use
-  - docker buildx build --platform linux/amd64 -f Dockerfile .
+  - sh ./docker-build.sh  
   when:
     event:
       exclude:
@@ -39,12 +35,8 @@ steps:
     DOCKER_PASSWORD:
       from_secret: docker-password
   commands:
-  - docker version
-  - docker buildx version
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-  - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-  - docker buildx create --name multiarch --use
-  - docker buildx build --platform linux/amd64 -t supporttools/kube-builder:latest -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} --push -f Dockerfile .
+  - sh ./docker-build.sh push
   when:
     event:
     - deployment
