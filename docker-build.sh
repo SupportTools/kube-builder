@@ -2,6 +2,16 @@
 
 type docker >/dev/null 2>&1 || { echo >&2 "Docker is not installed.  Aborting."; exit 1; }
 
+if [[ $1 == "push" ]]
+then
+    echo "Logging into docker hub..."
+    if ! docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    then
+        echo "Docker login failed"
+        exit 128
+    fi
+fi
+
 if [ -z "$DRONE_BUILD_NUMBER" ]
 then
     echo "DRONE_BUILD_NUMBER is not set.  Aborting."
