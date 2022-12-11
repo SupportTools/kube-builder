@@ -2,6 +2,9 @@ FROM docker.io/ubuntu:22.04
 ARG TARGETARCH
 ARG TARGETPLATFORM
 
+RUN sed -i 's/archive.ubuntu.com/mirrors.coxedgecomputing.com/g' /etc/apt/sources.list && \
+sed -i 's/security.ubuntu.com/mirrors.coxedgecomputing.com/g' /etc/apt/sources.list
+
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt update -y && apt install -yq --no-install-recommends \

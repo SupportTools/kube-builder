@@ -19,7 +19,7 @@ then
 fi
 
 echo "Testing docker build..."
-if ! docker build --add-host=archive.ubuntu.com:185.85.196.205 -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} --cache-from supporttools/kube-builder:latest -f Dockerfile .
+if ! docker build -t supporttools/kube-builder:${DRONE_BUILD_NUMBER} --cache-from supporttools/kube-builder:latest -f Dockerfile .
 then
     echo "Docker build failed"
     exit 127
