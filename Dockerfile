@@ -17,6 +17,8 @@ RUN apt update -y && apt install -yq --no-install-recommends \
     rsync \
     jq \
     ca-certificates \
+    make \
+    build-essential \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY init-kubectl /usr/local/bin/
