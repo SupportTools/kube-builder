@@ -25,9 +25,9 @@ COPY init-kubectl /usr/local/bin/
 RUN chmod +x /usr/local/bin/init-kubectl
 
 ## Install kubectl
-RUN curl -kLO "https://dl.k8s.io/release/$(curl -kL -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-RUN chmod +x kubectl
-RUN mv kubectl /usr/local/bin/kubectl
+RUN curl -kfsSL -o kubectl https://storage.googleapis.com/kubernetes-release/release/v1.26.0/bin/linux/amd64/kubectl && \
+chmod +x kubectl && \
+mv kubectl /usr/local/bin/kubectl
 
 ## Install kustomize
 RUN curl -ks "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
