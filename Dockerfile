@@ -19,6 +19,8 @@ RUN apt update -y && apt install -yq --no-install-recommends \
     ca-certificates \
     make \
     build-essential \
+    gnupg \
+    lsb-release \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY init-kubectl /usr/local/bin/
@@ -58,5 +60,31 @@ RUN curl -k https://raw.githubusercontent.com/canha/golang-tools-install-script/
 RUN wget -k -O rancher-projects https://raw.githubusercontent.com/SupportTools/rancher-projects/main/rancher-projects.sh && \
 chmod +x rancher-projects && \
 mv rancher-projects /usr/local/bin/
+
+## Install Docker
+RUN mkdir -p /etc/apt/keyrings && \
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+apt-get update && \
+apt-get install -yq --no-install-recommends \
+docker-ce \
+docker-ce-cli \
+containerd.io \
+docker-compose-plugin \
+docker-ce-rootless-extras \
+uidmap
+
+## Setting up rootless Docker with buildx
+RUN adduser rootless --disabled-password --gecos "" && \
+usermod -aG docker rootless && \
+su - rootless -c "dockerd-rootless-setuptool.sh install" && \
+su - rootless -c "echo 'export XDG_RUNTIME_DIR=/home/rootless/.docker/run' >> ~/.bashrc" && \
+su - rootless -c "echo 'export PATH=/usr/bin:$PATH' >> ~/.bashrc" && \
+su - rootless -c "echo 'export DOCKER_HOST=unix:///home/rootless/.docker/run/docker.sock' >> ~/.bashrc" && \
+su - rootless -c "mkdir -p ~/.docker/cli-plugins" && \
+su - rootless -c "wget -k -O ~/.docker/cli-plugins/docker-buildx https://github.com/docker/buildx/releases/download/v0.10.0/buildx-v0.10.0.linux-amd64" && \
+su - rootless -c "chmod a+x ~/.docker/cli-plugins/docker-buildx" && \
+su - rootless -c "docker buildx version"
+COPY start-rootless-docker.sh /usr/local/bin/
 
 ENTRYPOINT ["/usr/local/bin/init-kubectl"]
