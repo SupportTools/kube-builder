@@ -56,7 +56,7 @@ chmod +x kube-linter && \
 mv kube-linter /usr/local/bin/kube-linter
 
 ## Install GO
-COPY goinstall.sh /usr/local/bin/goinstall.sh
+COPY ./bin/goinstall.sh /usr/local/bin/goinstall.sh
 RUN chmod +x /usr/local/bin/goinstall.sh && \
 /usr/local/bin/goinstall.sh
 
