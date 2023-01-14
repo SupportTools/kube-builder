@@ -65,31 +65,8 @@ COPY ./bin/rancher-projects.sh /usr/local/bin/rancher-projects
 RUN chmod +x /usr/local/bin/rancher-projects
 
 ## Install Docker
-COPY ./bin/gpg-ubuntu /tmp/gpg-ubuntu
-RUN mkdir -p /etc/apt/keyrings && \
-cat /tmp/gpg-ubuntu | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
-apt-get update && \
-apt-get install -yq --no-install-recommends \
-docker-ce \
-docker-ce-cli \
-containerd.io \
-docker-compose-plugin \
-docker-ce-rootless-extras \
-uidmap
-
-## Setting up rootless Docker with buildx
-COPY ./bin/rootless /usr/local/bin/rootless
-RUN chmod +x /usr/local/bin/rootless && \
-adduser rootless --disabled-password --gecos "" && \
-usermod -aG docker rootless && \
-su - rootless -c "bash /usr/local/bin/rootless" && \
-su - rootless -c "echo 'export XDG_RUNTIME_DIR=/home/rootless/.docker/run' >> ~/.bashrc" && \
-su - rootless -c "echo 'export PATH=/usr/bin:$PATH' >> ~/.bashrc" && \
-su - rootless -c "echo 'export DOCKER_HOST=unix:///home/rootless/.docker/run/docker.sock' >> ~/.bashrc" && \
-su - rootless -c "mkdir -p ~/.docker/cli-plugins" && \
-su - rootless -c "wget -k -O ~/.docker/cli-plugins/docker-buildx https://github.com/docker/buildx/releases/download/v0.10.0/buildx-v0.10.0.linux-amd64" && \
-su - rootless -c "chmod a+x ~/.docker/cli-plugins/docker-buildx" && \
-su - rootless -c "docker buildx version"
+COPY ./bin/get-docker.sh /usr/local/bin/get-docker.sh
+RUN chmod +x /usr/local/bin/get-docker.sh && \
+/usr/local/bin/get-docker.sh
 
 ENTRYPOINT ["/usr/local/bin/init-kubectl"]
