@@ -77,7 +77,7 @@ uidmap
 ## Setting up rootless Docker with buildx
 RUN adduser rootless --disabled-password --gecos "" && \
 usermod -aG docker rootless && \
-su - rootless -c "dockerd-rootless-setuptool.sh install" && \
+su - rootless -c "curl -fsSL https://get.docker.com/rootless | sh" && \
 su - rootless -c "echo 'export XDG_RUNTIME_DIR=/home/rootless/.docker/run' >> ~/.bashrc" && \
 su - rootless -c "echo 'export PATH=/usr/bin:$PATH' >> ~/.bashrc" && \
 su - rootless -c "echo 'export DOCKER_HOST=unix:///home/rootless/.docker/run/docker.sock' >> ~/.bashrc" && \
