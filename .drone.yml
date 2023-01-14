@@ -50,5 +50,5 @@ services:
 - name: docker-in-docker
   docker:
   image: docker:dind-rootless
-  command: ["dockerd", "--host", "0.0.0.0", "--experimental"]
+  #command: ["dockerd", "--host", "0.0.0.0", "--experimental"]
   privileged: false
