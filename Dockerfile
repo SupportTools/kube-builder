@@ -23,6 +23,11 @@ RUN apt update -y && apt install -yq --no-install-recommends \
     lsb-release \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+## Adding common Root CA's
+COPY ./rootca/* /usr/local/share/ca-certificates/
+RUN chmod 644 /usr/local/share/ca-certificates/* && \
+    update-ca-certificates
+
 COPY init-kubectl /usr/local/bin/
 RUN chmod +x /usr/local/bin/init-kubectl
 
