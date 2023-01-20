@@ -32,7 +32,7 @@ then
     exit 126
 fi
 
-if [ "$1" == "push" ]
+if [ ! "$1" == "push" ]
 then
     echo "Test build, not pushing"
     exit 0
