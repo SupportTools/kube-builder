@@ -1,8 +1,5 @@
 FROM docker.io/ubuntu:22.04
 
-RUN sed -i 's/archive.ubuntu.com/mirror.coxedgecomputing.com/g' /etc/apt/sources.list && \
-    sed -i 's/security.ubuntu.com/mirror.coxedgecomputing.com/g' /etc/apt/sources.list
-
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt update -y && apt install -yq --no-install-recommends \
@@ -73,5 +70,8 @@ RUN chmod +x /usr/local/bin/rancher-projects
 COPY ./bin/get-docker.sh /usr/local/bin/get-docker.sh
 RUN chmod +x /usr/local/bin/get-docker.sh && \
 /usr/local/bin/get-docker.sh
+
+## Install Docker Buildx
+COPY --from=docker/buildx-bin:latest /buildx /usr/libexec/docker/cli-plugins/docker-buildx
 
 ENTRYPOINT ["/usr/local/bin/init-kubectl"]
