@@ -75,8 +75,7 @@ RUN chmod +x /usr/local/bin/get-docker.sh && \
 COPY --from=docker/buildx-bin:latest /buildx /usr/libexec/docker/cli-plugins/docker-buildx
 
 ## Install Grafana sync
-FROM ghcr.io/mpostument/grafana-sync:1.7.0 AS grafana-sync
-COPY --from=grafana-sync /usr/bin/grafana-sync /usr/bin/grafana-sync
+COPY ./bin/grafana-sync /usr/bin/grafana-sync
 RUN chmod +x /usr/bin/grafana-sync
 
 ENTRYPOINT ["/usr/local/bin/init-kubectl"]
