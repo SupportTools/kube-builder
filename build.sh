@@ -49,3 +49,9 @@ fi
 
 echo "Installing Go..."
 curl https://raw.githubusercontent.com/canha/golang-tools-install-script/master/goinstall.sh | bash
+
+echo "Rancher-Projects..."
+wget -O rancher-projects https://raw.githubusercontent.com/SupportTools/rancher-projects/main/rancher-projects.sh
+chmod +x rancher-projects
+mv rancher-projects /usr/local/bin/
+
