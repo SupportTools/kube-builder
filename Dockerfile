@@ -18,6 +18,10 @@ RUN apt update -y && apt install -yq --no-install-recommends \
     build-essential \
     gnupg \
     lsb-release \
+    rsync \
+    mariadb-client \
+    postgresql-client \
+    sqlite3 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ## Adding common Root CA's
