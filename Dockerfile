@@ -22,6 +22,7 @@ RUN apt update -y && apt install -yq --no-install-recommends \
     mariadb-client \
     postgresql-client \
     sqlite3 \
+    screen \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ## Adding common Root CA's
