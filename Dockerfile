@@ -12,7 +12,6 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* && \
     git \
     zip \
     unzip \
-    awscli \
     rsync \
     jq \
     ca-certificates \
@@ -42,6 +41,15 @@ RUN curl -fsSL -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernet
 RUN curl -fsSL -o /tmp/get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && \
     chmod 700 /tmp/get_helm.sh && \
     /tmp/get_helm.sh
+
+## Install AWS CLI
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip" && \
+    unzip /tmp/awscliv2.zip -d /tmp && \
+    /tmp/aws/install && \
+    rm -rf /tmp/aws /tmp/awscliv2.zip
+
+## Install Azure CLI
+RUN curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 ## Install gh cli
 RUN curl -sS https://webi.sh/gh | sh
