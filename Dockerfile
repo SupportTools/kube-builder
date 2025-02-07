@@ -1,4 +1,4 @@
-FROM docker.io/ubuntu:22.04
+FROM docker.io/ubuntu:latest
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -34,47 +34,45 @@ COPY init-kubectl /usr/local/bin/
 RUN chmod +x /usr/local/bin/init-kubectl
 
 ## Install kubectl
-COPY ./bin/kubectl /usr/local/bin/kubectl
-RUN chmod +x /usr/local/bin/kubectl
-
-## Install kustomize
-COPY ./bin/install_kustomize.sh /usr/local/bin/install_kustomize.sh
-RUN chmod +x /usr/local/bin/install_kustomize.sh && \
-bash /usr/local/bin/install_kustomize.sh
+RUN curl -fsSL -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && \
+    chmod +x /usr/local/bin/kubectl
 
 ## Install helm
-COPY ./bin/get_helm.sh /usr/local/bin/get_helm.sh
-RUN chmod +x /usr/local/bin/get_helm.sh && \
-/usr/local/bin/get_helm.sh && \
-helm version || exit 2
+RUN curl -fsSL -o /tmp/get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && \
+    chmod 700 /tmp/get_helm.sh && \
+    /tmp/get_helm.sh
 
 ## Install gh cli
-COPY ./bin/githubcli-archive-keyring.gpg /etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg
-RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/trusted.gpg.d/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
-apt update && \
-apt-get install -yq --no-install-recommends gh && \
-gh version || exit 2
-
-## Install kube-linter
-COPY ./bin/kube-linter-linux.tar.gz /tmp/kube-linter-linux.tar.gz
-RUN cd /tmp && \
-tar -zvxf kube-linter-linux.tar.gz && \
-chmod +x kube-linter && \
-mv kube-linter /usr/local/bin/kube-linter
+RUN curl -sS https://webi.sh/gh | sh
 
 ## Install GO
-COPY ./bin/goinstall.sh /usr/local/bin/goinstall.sh
-RUN chmod +x /usr/local/bin/goinstall.sh && \
-/usr/local/bin/goinstall.sh
+RUN curl -fsSL https://go.dev/dl/go1.21.6.linux-amd64.tar.gz | tar -C /usr/local -xzf - && \
+    echo 'export PATH=$PATH:/usr/local/go/bin' >> /etc/profile && \
+    echo 'export PATH=$PATH:/usr/local/go/bin' >> /root/.bashrc
+
+## Set Go environment variables
+ENV PATH="/usr/local/go/bin:${PATH}"
+ENV GOPATH="/go"
+ENV PATH="/go/bin:${PATH}"
+
+## Install kube-linter
+RUN go install golang.stackrox.io/kube-linter/cmd/kube-linter@latest
 
 ## Install rancher-projects
-COPY ./bin/rancher-projects.sh /usr/local/bin/rancher-projects
-RUN chmod +x /usr/local/bin/rancher-projects
+RUN curl -o /usr/local/bin/rancher-projects https://raw.githubusercontent.com/SupportTools/rancher-projects/main/rancher-projects.sh && \
+    chmod +x /usr/local/bin/rancher-projects
 
 ## Install Docker
-COPY ./bin/get-docker.sh /usr/local/bin/get-docker.sh
-RUN chmod +x /usr/local/bin/get-docker.sh && \
-/usr/local/bin/get-docker.sh
+RUN apt-get update -y && apt-get install -yq --no-install-recommends \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg-agent \
+    software-properties-common && \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
+    add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && \
+    apt-get update -y && apt-get install -yq --no-install-recommends docker-ce docker-ce-cli containerd.io && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ## Install Docker Buildx
 COPY --from=docker/buildx-bin:latest /buildx /usr/libexec/docker/cli-plugins/docker-buildx
