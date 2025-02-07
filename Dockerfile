@@ -2,7 +2,9 @@ FROM docker.io/ubuntu:latest
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt update -y && apt install -yq --no-install-recommends \
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    apt update -y && \
+    DEBIAN_FRONTEND=noninteractive apt install -yq --no-install-recommends \
     apt-utils \
     curl \
     wget \
@@ -18,7 +20,6 @@ RUN apt update -y && apt install -yq --no-install-recommends \
     build-essential \
     gnupg \
     lsb-release \
-    rsync \
     mariadb-client \
     postgresql-client \
     sqlite3 \
